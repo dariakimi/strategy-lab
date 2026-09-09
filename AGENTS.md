@@ -1,9 +1,9 @@
-<!-- BEGIN:nextjs-agent-rules -->
+# Strategy Lab development
 
-# This is NOT the Next.js you know
-
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
-
-This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
-
-<!-- END:nextjs-agent-rules -->
+- Work in this independent Next.js repository. Use npm and retain package-lock.json.
+- Keep game rules pure in src/lib/game.ts; UI belongs in focused client components.
+- Store repeated editorial content in typed arrays in src/lib/content.ts.
+- Use semantic HTML, descriptive anchors, real buttons, table headers, live outcomes, and visible focus. Never rely on color alone.
+- Keep palette values in semantic CSS properties. Use next/font and code-native diagrams; avoid heavy UI or animation libraries.
+- Run npm run lint, npm test, and npm run build. Validate production in a browser at 1440, 1024, 768, and 390px; test keyboard navigation, both games, overflow, and reduced motion.
+- Save review screenshots in docs/screenshots. Never commit node_modules, .next, credentials, or temporary browser output.
