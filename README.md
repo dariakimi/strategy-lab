@@ -106,3 +106,31 @@ A static export is also possible by setting `output: "export"` in next.config.ts
 - Nobel Prize, auction theory: https://www.nobelprize.org/prizes/economic-sciences/2020/press-release/
 
 The learning sequence is situation → choice → outcome → concept. Reading and experiment durations are approximate and include reflection.
+
+## Playable game library
+
+Visit `/games` for 147 scenarios: 77 payoff matrices, 20 bargaining experiments,
+15 sequential trust games, and 35 repeated dilemmas. Search titles, concepts, and
+situations; filter by format or topic. Every scenario has a statically generated
+`/games/[slug]` page and a restartable, keyboard-accessible player.
+
+- `src/lib/scenarios.ts`: typed catalogue and stable slugs.
+- `src/lib/scenario-engine.ts`: pure rules, Nash calculation, sequential payouts,
+  bargaining acceptance, and eight repeated-game policies.
+- `src/components/GameLibrary.tsx`: search, filters, and progressive display.
+- `src/components/ScenarioPlayer.tsx`: accessible players for the four formats.
+- `src/lib/scenario-engine.test.ts`: catalogue integrity and rule regression tests.
+
+Matrix opponents choose columns uniformly and independently. Pure Nash outcomes
+are calculated from the displayed payoffs. Prisoner's Dilemma minimizes sentence
+years (1/1, 5/0, 0/5, 3/3); other matrices maximize illustrative points.
+Bargaining divides 100 points with a fixed acceptance threshold revealed afterward.
+Sequential games alternate control, award both displayed shares when either
+player takes, and force taking at the final step. Their opponent policy is stated
+before play; these schedules do not universally imply immediate taking is optimal.
+Repeated games use 3/3, 0/5, 5/0, 1/1 points and the displayed finite horizon.
+Policies include Tit for Tat, Grim Trigger, Always Cooperate, Always Defect,
+Generous Tit for Tat, Win Stay Lose Shift, Random, and Tit for Two Tats.
+Random policies use browser cryptographic randomness; tests inject fixed draws.
+Scenario narratives provide context, while the playable panel defines the actual
+model. These simplified models are educational, not real-world predictions.

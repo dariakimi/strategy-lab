@@ -2,7 +2,7 @@
 import { useRef, useState } from "react";
 const links = [
   ["Learn", "#learn"],
-  ["Games", "#games"],
+  ["Games", "/games"],
   ["Pathways", "#pathways"],
   ["Field Notes", "#field-notes"],
   ["About", "#about"],

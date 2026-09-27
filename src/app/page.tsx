@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Header from "@/components/Header";
 import Matrix from "@/components/Matrix";
 import RepeatedGame from "@/components/RepeatedGame";
@@ -29,9 +30,9 @@ export default function Home() {
                   Start with the Prisoner’s Dilemma{" "}
                   <span aria-hidden="true">↗</span>
                 </a>
-                <a className="text-link" href="#games">
-                  Explore all games <span aria-hidden="true">→</span>
-                </a>
+                <Link className="text-link" href="/games">
+                  Play all 147 games <span aria-hidden="true">→</span>
+                </Link>
               </div>
               <div className="hero-footnote">
                 <span aria-hidden="true">↳</span> No background needed. Just a
@@ -97,23 +98,20 @@ export default function Home() {
                     <span>{game.difficulty}</span>
                     <span>{game.duration}</span>
                   </div>
-                  {i === 0 ? (
-                    <a className="text-link" href="#matrix">
-                      Play the experiment <span aria-hidden="true">→</span>
-                    </a>
-                  ) : (
-                    <details className="game-details">
-                      <summary>
-                        Explore the dilemma <span aria-hidden="true">+</span>
-                      </summary>
-                      <h4>{game.concept}</h4>
-                      <p>{game.detail}</p>
-                    </details>
-                  )}
+                  <a className="text-link" href={game.href}>
+                    Play the experiment →
+                  </a>
                 </article>
               ))}
             </div>
           </section>
+          <div className="library-invitation">
+            <p className="eyebrow">Go beyond the foundations</p>
+            <h2>147 situations. A new perspective in every one.</h2>
+            <Link className="button ink" href="/games">
+              Explore the full game library ↗
+            </Link>
+          </div>
           <RepeatedGame />
           <section
             className="section-block"
@@ -304,7 +302,7 @@ export default function Home() {
             </div>
             <nav aria-label="Footer learning links">
               <a href="#learn">Learn</a>
-              <a href="#games">Game index</a>
+              <Link href="/games">Game index</Link>
               <a href="#pathways">Pathways</a>
               <a href="#field-notes">Field Notes</a>
             </nav>

@@ -38,3 +38,27 @@ Browser tests used the Codex browser API against the production server, not a de
 - `social-preview.png` — locally generated 1200 × 630 sharing image.
 
 Viewport screenshots are used because the browser’s full-page stitching produced duplicated sections. Those temporary stitched captures are not included.
+
+## Game library expansion — 2026-09-27
+
+- `npm run lint`: passed (internal-link lint errors corrected before final run).
+- `npm test`: 11 passing tests, including all 147 records, Nash equilibria,
+  prison sentences, bargaining boundaries, every sequential schedule, all eight
+  repeated strategies, and finite-round termination.
+- `npm run build`: passed; 147 scenario pages statically generated.
+- `npm run start -- --port 3001`: production application started successfully.
+- Browser: search, reset filters, format filter (35 repeated), and pagination
+  (18 to 36) verified. Played matrix/restart, bargaining acceptance/rejection,
+  sequential pass/take with both payouts, ten-round Tit for Tat to completion,
+  and five-round homepage lesson to completion. Verified first-round cooperation,
+  second-round retaliation, and disabled choices at completion.
+- Keyboard: mobile menu opened with Enter and closed with Escape; focus returned
+  to the toggle with a visible 3px outline. Range input operated with keyboard.
+- Library checked at 1440, 1024, 768, and 390px without horizontal page overflow;
+  mobile repeated player and homepage also checked. Matrix/history tables use
+  contained horizontal scrolling. Outcomes have semantic status live regions.
+- Reduced-motion CSS removes animation, transitions, and smooth scrolling;
+  new game mechanics have no animation or timing dependency.
+- Browser console had no errors or warnings in the tested local application.
+- Screenshots: `docs/screenshots/library-desktop-1440.jpg` and
+  `docs/screenshots/library-mobile-390.jpg`.

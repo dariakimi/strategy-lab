@@ -1,5 +1,6 @@
 export type Game = {
   id: string;
+  href: string;
   title: string;
   description: string;
   players: string;
@@ -12,6 +13,7 @@ export type Game = {
 export const games: Game[] = [
   {
     id: "prisoners-dilemma",
+    href: "/games/prisoners-dilemma",
     title: "Prisoner’s Dilemma",
     description: "When doing what’s best for you isn’t best for everyone.",
     players: "2 players",
@@ -24,6 +26,7 @@ export const games: Game[] = [
   },
   {
     id: "ultimatum",
+    href: "/games/salary-negotiation",
     title: "Ultimatum Game",
     description: "How much is fair? Find the price of an unfair offer.",
     players: "2 players",
@@ -36,6 +39,7 @@ export const games: Game[] = [
   },
   {
     id: "stag-hunt",
+    href: "/games/stag-hunt",
     title: "Stag Hunt",
     description: "A bigger reward requires a little faith in someone else.",
     players: "2 players",
@@ -48,10 +52,11 @@ export const games: Game[] = [
   },
   {
     id: "commons",
+    href: "/games/tragedy-of-the-commons",
     title: "Tragedy of the Commons",
     description:
       "A shared resource. Individual choices. Collective consequences.",
-    players: "3+ players",
+    players: "2 players",
     difficulty: "Intermediate",
     duration: "7 min",
     concept: "The hidden cost of taking more",
@@ -72,7 +77,7 @@ export const pathways: {
     description:
       "Start with a choice, not an equation. Build your first strategic instincts.",
     scope: "Start here · 4 foundational games",
-    href: "#games",
+    href: "/games",
     tag: "01 / The essentials",
   },
   {
@@ -80,7 +85,7 @@ export const pathways: {
     description:
       "Follow the incentives behind prices, bargaining, and shared resources.",
     scope: "Explore bargaining + the commons",
-    href: "#ultimatum",
+    href: "/games/salary-negotiation",
     tag: "02 / The exchange",
   },
   {
@@ -88,7 +93,7 @@ export const pathways: {
     description:
       "Explore credible promises, common ground, and the value of trust.",
     scope: "Explore coordination + repeated games",
-    href: "#stag-hunt",
+    href: "/games/stag-hunt",
     tag: "03 / The agreement",
   },
   {
@@ -96,7 +101,7 @@ export const pathways: {
     description:
       "Think in strategies. Discover how a simple rule creates complex behavior.",
     scope: "Explore the Tit for Tat experiment",
-    href: "#learn",
+    href: "/games/neighborhood-watch-reciprocity",
     tag: "04 / The algorithm",
   },
 ];
