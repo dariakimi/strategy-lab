@@ -29,7 +29,6 @@ export default function Games() {
       <main id="main">
         <section className="library-hero">
           <div>
-            <p className="eyebrow">The experiment index / 147 scenarios</p>
             <h1>
               More ways to
               <br />
