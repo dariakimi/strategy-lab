@@ -4,7 +4,7 @@ import GameLibrary from "@/components/GameLibrary";
 import { scenarios } from "@/lib/scenarios";
 const title = "Game Library — Strategy Lab",
   description =
-    "Explore 147 playable game-theory scenarios: payoff matrices, bargaining, sequential trust, and repeated dilemmas.";
+    "Play real-life decisions about work, money, relationships, and shared resources. Choose your action and continue to the next game.";
 export const metadata: Metadata = {
   title,
   description,
@@ -27,31 +27,17 @@ export default function Games() {
         </nav>
       </header>
       <main id="main">
-        <section className="library-hero">
-          <div>
-            <h1>
-              More ways to
-              <br />
-              <em>think strategically.</em>
-            </h1>
-            <p>
-              From a first act of trust to the last round of negotiation. Find a
-              situation, make your move, and discover the incentives beneath it.
-            </p>
-          </div>
-          <div
-            className="library-tally"
-            aria-label="147 experiments in 4 formats"
-          >
-            <strong>
-              147<span>↗</span>
-            </strong>
-            <p>
-              77 matrices · 20 bargains
-              <br />
-              15 sequential games · 35 repeated dilemmas
-            </p>
-          </div>
+        <section className="library-play-intro">
+          <h1>
+            What would <em>you do?</em>
+          </h1>
+          <p>
+            Negotiate a salary. Choose what to wear. Set a return policy. Play a
+            situation, see what happens, then go straight to the next game.
+          </p>
+          <Link className="button ink" href={`/games/${scenarios[0].id}`}>
+            Start playing →
+          </Link>
         </section>
         <GameLibrary scenarios={scenarios} />
       </main>

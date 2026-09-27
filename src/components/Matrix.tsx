@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { explainSentence, prisonSentence, type Move } from "@/lib/game";
+const action = { Cooperate: "Stay silent", Defect: "Confess" };
 const moves: Move[] = ["Cooperate", "Defect"];
 export default function Matrix() {
   const [result, setResult] = useState<{ you: Move; opponent: Move } | null>(
@@ -40,8 +41,8 @@ export default function Matrix() {
           <tr>
             <td aria-hidden="true">You / Them</td>
             {moves.map((m) => (
-              <th key={m} scope="col">
-                {m}
+              <th key={action[m]} scope="col">
+                {action[m]}
               </th>
             ))}
           </tr>
@@ -49,7 +50,7 @@ export default function Matrix() {
         <tbody>
           {moves.map((you) => (
             <tr key={you}>
-              <th scope="row">{you}</th>
+              <th scope="row">{action[you]}</th>
               {moves.map((opponent) => {
                 const selected =
                   result?.you === you && result.opponent === opponent;
@@ -91,15 +92,17 @@ export default function Matrix() {
         Both silent: 1 year each. Both confess: 3 years each. Only one
         confesses: they go free; the silent prisoner gets 5 years.
       </p>
-      <p className="choice-label">Cooperate = stay silent. Defect = confess.</p>
+      <p className="choice-label">
+        Your actions: stay silent or confess to the police.
+      </p>
       <div className="choice-buttons">
         {moves.map((m) => (
           <button
             className={m === "Cooperate" ? "button green" : "button outline"}
-            key={m}
+            key={action[m]}
             onClick={() => choose(m)}
           >
-            {m}
+            {action[m]}
             <span aria-hidden="true">{m === "Cooperate" ? "↗" : "→"}</span>
           </button>
         ))}
@@ -108,8 +111,9 @@ export default function Matrix() {
         {result ? (
           <>
             <strong>
-              Prison years — You: {prisonSentence(result.you, result.opponent)[0]} ·
-              Them: {prisonSentence(result.you, result.opponent)[1]}
+              Prison years — You:{" "}
+              {prisonSentence(result.you, result.opponent)[0]} · Them:{" "}
+              {prisonSentence(result.you, result.opponent)[1]}
             </strong>
             <p>{explainSentence(result.you, result.opponent)}</p>
           </>

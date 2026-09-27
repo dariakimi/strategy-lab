@@ -11,9 +11,9 @@ import {
   strategyMove,
   type RepeatedScenario,
 } from "./scenario-engine.ts";
-test("catalogue contains 147 unique, valid playable scenarios", () => {
-  assert.equal(scenarios.length, 147);
-  assert.equal(new Set(scenarios.map((s) => s.id)).size, 147);
+test("catalogue contains 177 unique, valid playable scenarios", () => {
+  assert.equal(scenarios.length, 177);
+  assert.equal(new Set(scenarios.map((s) => s.id)).size, 177);
   for (const s of scenarios) {
     assert.ok(s.title && s.situation);
     if (s.type === "matrix") {
@@ -29,7 +29,7 @@ test("catalogue contains 147 unique, valid playable scenarios", () => {
   }
 });
 test("prison sentences and equilibrium minimize years", () => {
-  const s = scenarios[0];
+  const s = scenarios.find((s) => s.id === "prisoners-dilemma")!;
   assert.equal(s.type, "matrix");
   if (s.type !== "matrix") return;
   assert.deepEqual(s.payoffs, [
@@ -95,4 +95,30 @@ test("all eight policies honor retaliation, forgiveness and random boundaries", 
   assert.equal(strategyMove("win-stay-lose-shift", h, 0), "Defect");
   assert.equal(strategyMove("random", [], 0.49), "Cooperate");
   assert.equal(strategyMove("random", [], 0.5), "Defect");
+});
+
+test("all public scenarios are included and repeated choices describe concrete actions", () => {
+  assert.equal(scenarios.filter((s) => s.source === "arena").length, 80);
+  for (const id of [
+    "salary-negotiation-opening-signal",
+    "quiet-luxury-vs-logo-dressing",
+    "return-policy-arms-race",
+    "entry-deterrence-pricing",
+  ])
+    assert.ok(scenarios.some((s) => s.id === id));
+  for (const s of scenarios) {
+    if (s.type === "repeated") {
+      assert.ok(s.actions.Cooperate.length > 8);
+      assert.ok(s.actions.Defect.length > 8);
+      assert.notEqual(s.actions.Cooperate, s.actions.Defect);
+    }
+    if (s.type === "centipede") {
+      assert.ok(s.actions.take.length > 8);
+      assert.ok(s.actions.pass.length > 8);
+    }
+    if (s.type === "matrix")
+      assert.ok(
+        [...s.rows, ...s.cols].every((a) => !/^(Cooperate|Defect)$/i.test(a)),
+      );
+  }
 });

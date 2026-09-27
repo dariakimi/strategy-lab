@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
-import { explain, MAX_ROUNDS, playRound, type Round } from "@/lib/game";
+import { MAX_ROUNDS, playRound, type Round } from "@/lib/game";
+const actions = { Cooperate: "Patrol the block", Defect: "Skip your patrol" };
 export default function RepeatedGame() {
   const [history, setHistory] = useState<Round[]>([]);
   const complete = history.length === MAX_ROUNDS;
@@ -15,9 +16,9 @@ export default function RepeatedGame() {
           Can cooperation survive repeated <em>betrayal?</em>
         </h2>
         <p>
-          One encounter is a gamble. A repeated encounter is a relationship.
-          Play five rounds and discover what changes when your opponent
-          remembers.
+          You and a neighbor share a neighborhood watch. Each week, choose to
+          patrol the block or skip your patrol. Play five weeks and see how your
+          neighbor responds.
         </p>
         <div className="opponent">
           <span className="opponent-symbol" aria-hidden="true">
@@ -25,16 +26,13 @@ export default function RepeatedGame() {
           </span>
           <div>
             <strong>Meet Tit for Tat</strong>
-            <p>
-              It cooperates first. After that, it copies your previous move.
-              Firm, forgiving, and very predictable.
-            </p>
+            <p>It patrols first, then copies your previous action.</p>
           </div>
         </div>
         <p className="lesson-rules">
-          POINTS, NOT PRISON YEARS · Higher is better. Both cooperate: 3 each.
-          Both defect: 1 each. Defect alone: 5 for the defector, 0 for the
-          cooperator.
+          Higher points are better. Both patrol: 3 each. Both skip: 1 each. Skip
+          while your neighbor patrols: you get 5, they get 0. Patrol alone: you
+          get 0, they get 5.
         </p>
       </div>
       <div className="round-panel">
@@ -81,24 +79,27 @@ export default function RepeatedGame() {
             disabled={complete}
             onClick={() => setHistory((h) => playRound(h, "Cooperate"))}
           >
-            Cooperate ↗
+            Patrol the block ↗
           </button>
           <button
             className="button light-outline"
             disabled={complete}
             onClick={() => setHistory((h) => playRound(h, "Defect"))}
           >
-            Defect →
+            Skip your patrol →
           </button>
         </div>
         <div className="round-feedback" aria-live="polite" aria-atomic="true">
           {last ? (
             <>
               <strong>
-                Round {history.length}: you {last.you.toLowerCase()}, Tit for
-                Tat {last.opponent === "Cooperate" ? "cooperates" : "defects"}.
+                Round {history.length}: you chose “{actions[last.you]}”; your
+                neighbor chose “{actions[last.opponent]}”.
               </strong>
-              <p>{explain(last.you, last.opponent)}</p>
+              <p>
+                You earned {last.yours} points; your neighbor earned{" "}
+                {last.theirs}.
+              </p>
               {complete && (
                 <p className="final-insight">
                   Experiment complete. Mutual cooperation would earn 15 points
@@ -109,9 +110,7 @@ export default function RepeatedGame() {
               )}
             </>
           ) : (
-            <p>
-              The first move is yours. Tit for Tat will begin by cooperating.
-            </p>
+            <p>The first move is yours. Your neighbor begins by patrolling.</p>
           )}
         </div>
         <details className="history" open={history.length > 0}>
@@ -135,10 +134,10 @@ export default function RepeatedGame() {
                   <tr key={i}>
                     <th scope="row">{i + 1}</th>
                     <td>
-                      {r.you} · {r.yours}
+                      {actions[r.you]} · {r.yours}
                     </td>
                     <td>
-                      {r.opponent} · {r.theirs}
+                      {actions[r.opponent]} · {r.theirs}
                     </td>
                   </tr>
                 ))}

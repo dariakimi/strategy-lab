@@ -34,7 +34,8 @@ export default async function Game({
     index = scenarios.findIndex((s) => s.id === slug);
   if (index < 0) notFound();
   const s = scenarios[index],
-    next = scenarios[(index + 1) % scenarios.length];
+    next = scenarios[(index + 1) % scenarios.length],
+    previous = scenarios[(index - 1 + scenarios.length) % scenarios.length];
   return (
     <div className="page-shell library-shell">
       <a className="skip-link" href="#main">
@@ -45,7 +46,7 @@ export default async function Game({
           Strategy Lab<span className="brand-period">.</span>
         </Link>
         <Link className="text-link" href="/games">
-          ← All 147 games
+          ← All games
         </Link>
       </header>
       <main id="main" className="scenario-layout">
@@ -54,25 +55,55 @@ export default async function Game({
             Experiment {String(index + 1).padStart(3, "0")} / {formats[s.type]}
           </p>
           <h1>{s.title}</h1>
-          <p className="scenario-concept">{s.concept}</p>
+
           <p>{s.situation}</p>
-          <aside className="model-note">
-            <strong>About this model</strong>
+          <details className="model-note">
+            <summary>How this model works</summary>
             <p>
-              The situation provides context. The rules in the playable panel
-              define the experiment; additional real-world details, uncertainty,
-              and negotiation are not simulated.
+              These are simplified, illustrative outcomes. Points compare
+              outcomes within this game; they do not predict real-world
+              salaries, status, or other results. The playable rules define what
+              is simulated.
             </p>
-          </aside>
+            <p>Concept: {s.concept}</p>
+            {s.source === "arena" && (
+              <a
+                className="text-link"
+                href="https://dariakimi.github.io/game-theory-arena/"
+              >
+                Scenario from Game Theory Arena ↗
+              </a>
+            )}
+          </details>
           <Link className="text-link" href="/games">
             Browse the library →
           </Link>
         </section>
-        <ScenarioPlayer scenario={s} />
+        <div className="game-workbench">
+          <nav className="game-navigation" aria-label="Move between games">
+            <Link
+              href={`/games/${previous.id}`}
+              aria-label={`Previous game: ${previous.title}`}
+            >
+              ← Previous game
+            </Link>
+            <Link className="button ink" href={`/games/${next.id}`}>
+              Next game →
+            </Link>
+          </nav>
+          <ScenarioPlayer key={s.id} scenario={s} />
+          <nav className="game-navigation" aria-label="Continue playing">
+            <Link href="/games">All situations</Link>
+            <Link className="button ink" href={`/games/${next.id}`}>
+              Next game →
+            </Link>
+          </nav>
+          <p className="next-game-title">Up next: {next.title}</p>
+        </div>
       </main>
       <footer className="library-footer">
         <Link href="/games">← Game index</Link>
-        <Link href={`/games/${next.id}`}>Next: {next.title} →</Link>
+        <Link href={`/games/${next.id}`}>Next game: {next.title} →</Link>
       </footer>
     </div>
   );

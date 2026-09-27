@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { scenarios } from "@/lib/scenarios";
 import Header from "@/components/Header";
 import Matrix from "@/components/Matrix";
 import RepeatedGame from "@/components/RepeatedGame";
@@ -31,7 +32,8 @@ export default function Home() {
                   <span aria-hidden="true">↗</span>
                 </a>
                 <Link className="text-link" href="/games">
-                  Play all 147 games <span aria-hidden="true">→</span>
+                  Play all {scenarios.length} games{" "}
+                  <span aria-hidden="true">→</span>
                 </Link>
               </div>
               <div className="hero-footnote">
@@ -107,7 +109,9 @@ export default function Home() {
           </section>
           <div className="library-invitation">
             <p className="eyebrow">Go beyond the foundations</p>
-            <h2>147 situations. A new perspective in every one.</h2>
+            <h2>
+              {scenarios.length} situations. A new perspective in every one.
+            </h2>
             <Link className="button ink" href="/games">
               Explore the full game library ↗
             </Link>

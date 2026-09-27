@@ -1,13 +1,13 @@
 "use client";
 import { useState } from "react";
-import { explain, type Move, type Round } from "@/lib/game";
+import { type Move, type Round } from "@/lib/game";
 import {
   advanceCent,
   bargain,
   centipedePayoffs,
   initialCent,
   nashCells,
-  policies,
+  describePolicy,
   repeatRound,
   type Scenario,
   type MatrixScenario,
@@ -34,6 +34,21 @@ function MatrixPlayer({ s }: { s: MatrixScenario }) {
         Your choices are the rows. {s.opponent} chooses a column at random,
         independently of your move.
       </p>
+      <h2 className="action-heading">Choose your action</h2>
+      <div className="experiment-actions">
+        {s.rows.map((r, i) => (
+          <button
+            className="button ink"
+            key={i}
+            disabled={cell !== null}
+            onClick={() =>
+              setCell(i * s.cols.length + Math.floor(draw() * s.cols.length))
+            }
+          >
+            {r}
+          </button>
+        ))}
+      </div>
       <div
         className="table-scroll"
         tabIndex={0}
@@ -74,20 +89,6 @@ function MatrixPlayer({ s }: { s: MatrixScenario }) {
           </tbody>
         </table>
       </div>
-      <div className="experiment-actions">
-        {s.rows.map((r, i) => (
-          <button
-            className="button ink"
-            key={i}
-            disabled={cell !== null}
-            onClick={() =>
-              setCell(i * s.cols.length + Math.floor(draw() * s.cols.length))
-            }
-          >
-            {r}
-          </button>
-        ))}
-      </div>
       <div className="experiment-feedback" role="status">
         {result && cell !== null ? (
           <>
@@ -107,7 +108,7 @@ function MatrixPlayer({ s }: { s: MatrixScenario }) {
             </p>
           </>
         ) : (
-          "Choose a row to reveal the outcome."
+          "Choose one of the actions above to see what happens."
         )}
       </div>
       <Reset onClick={() => setCell(null)} />
@@ -173,12 +174,28 @@ function UltimatumPlayer({ s }: { s: UltimatumScenario }) {
     </>
   );
 }
+function describeEvent(event: string, s: CentipedeScenario) {
+  return event
+    .replace(/takes?\./, `chose “${s.actions.take}”.`)
+    .replace(/pass(?:es)?\./, `chose “${s.actions.pass}”.`);
+}
 function CentipedePlayer({ s }: { s: CentipedeScenario }) {
   const [state, setState] = useState(initialCent),
     path = centipedePayoffs(s);
   return (
     <>
-      <p className="eyebrow">Take or pass / {s.nodes} steps</p>
+      <p className="eyebrow">Your decision / {s.nodes} steps</p>
+      <h2 className="action-heading">Two actions available</h2>
+      <ul className="available-actions">
+        <li>
+          <strong>{s.actions.take}</strong>: finish now and receive the
+          displayed split.
+        </li>
+        <li>
+          <strong>{s.actions.pass}</strong>: continue to the next stage and let
+          your partner decide.
+        </li>
+      </ul>
       <p>
         Taking ends the game and awards both displayed shares. Passing moves to
         the next split. You move first. Your opponent{" "}
@@ -213,18 +230,20 @@ function CentipedePlayer({ s }: { s: CentipedeScenario }) {
           disabled={state.ended}
           onClick={() => setState(advanceCent(s, state, "take"))}
         >
-          Take the split
+          {s.actions.take}
         </button>
         <button
           className="button"
           disabled={state.ended || state.node === s.nodes - 1}
           onClick={() => setState(advanceCent(s, state, "pass"))}
         >
-          Pass →
+          {s.actions.pass} →
         </button>
       </div>
       <div className="experiment-feedback" role="status">
-        {state.events.at(-1) ?? "Your turn at step 1."}
+        {state.events.length
+          ? describeEvent(state.events.at(-1)!, s)
+          : "Your turn at step 1."}
         {state.scores ? (
           <>
             <p>
@@ -248,7 +267,7 @@ function CentipedePlayer({ s }: { s: CentipedeScenario }) {
           <summary>Decision history</summary>
           <ol>
             {state.events.map((e) => (
-              <li key={e}>{e}</li>
+              <li key={e}>{describeEvent(e, s)}</li>
             ))}
           </ol>
         </details>
@@ -267,12 +286,27 @@ function RepeatedPlayer({ s }: { s: RepeatedScenario }) {
         Round {Math.min(history.length + 1, s.rounds)} / {s.rounds}
       </p>
       <p>
-        <strong>Opponent policy:</strong> {policies[s.strategy]}
+        <strong>Opponent policy:</strong> {describePolicy(s)}
       </p>
-      <p>
-        Points (you / them): both cooperate 3 / 3; only you defect 5 / 0; only
-        they defect 0 / 5; both defect 1 / 1.
-      </p>
+      <h2 className="action-heading">Your available actions</h2>
+      <ul className="available-actions">
+        <li>
+          <strong>{s.actions.Cooperate}</strong> — keep your side of the shared
+          commitment.
+        </li>
+        <li>
+          <strong>{s.actions.Defect}</strong> — put your immediate interest
+          first.
+        </li>
+      </ul>
+      <details className="payoff-explainer">
+        <summary>How points work</summary>
+        <p>
+          Both choose “{s.actions.Cooperate}”: 3 each. Only you choose “
+          {s.actions.Defect}”: you get 5, they get 0. Only they choose it: you
+          get 0, they get 5. Both choose “{s.actions.Defect}”: 1 each.
+        </p>
+      </details>
       <div className="experiment-score">
         <span>
           You <strong>{history.reduce((n, r) => n + r.yours, 0)}</strong>
@@ -288,22 +322,25 @@ function RepeatedPlayer({ s }: { s: RepeatedScenario }) {
             className="button ink"
             key={move}
             disabled={done}
-            onClick={() => setHistory(repeatRound(s, history, move, draw()))}
+            onClick={() =>
+              setHistory((previous) => repeatRound(s, previous, move, draw()))
+            }
           >
-            {move}
+            {s.actions[move]}
           </button>
         ))}
       </div>
       <div className="experiment-feedback" role="status">
         {last
-          ? `Round ${history.length}: ${explain(last.you, last.opponent)}`
+          ? `Round ${history.length}: you chose “${s.actions[last.you]}”; ${s.opponent} chose “${s.actions[last.opponent]}”. You earned ${last.yours} points; they earned ${last.theirs}.`
           : "Choose your first move."}
         {done && (
           <p>
-            <strong>Experiment complete.</strong> You cooperated in{" "}
+            <strong>Experiment complete.</strong> You chose “
+            {s.actions.Cooperate}” in{" "}
             {history.filter((r) => r.you === "Cooperate").length} of {s.rounds}{" "}
-            rounds. {policies[s.strategy]} Replay with a different sequence to
-            see how this policy changes the cost of betrayal and the value of
+            rounds. {describePolicy(s)} Replay with a different sequence to see
+            how this policy changes the cost of betrayal and the value of
             returning to cooperation.
           </p>
         )}
@@ -324,8 +361,8 @@ function RepeatedPlayer({ s }: { s: RepeatedScenario }) {
               {history.map((r, i) => (
                 <tr key={i}>
                   <th scope="row">{i + 1}</th>
-                  <td>{r.you}</td>
-                  <td>{r.opponent}</td>
+                  <td>{s.actions[r.you]}</td>
+                  <td>{s.actions[r.opponent]}</td>
                   <td>
                     {r.yours} / {r.theirs}
                   </td>

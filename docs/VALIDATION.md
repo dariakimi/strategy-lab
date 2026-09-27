@@ -62,3 +62,26 @@ Viewport screenshots are used because the browser’s full-page stitching produc
 - Browser console had no errors or warnings in the tested local application.
 - Screenshots: `docs/screenshots/library-desktop-1440.jpg` and
   `docs/screenshots/library-mobile-390.jpg`.
+
+## Real-life scenarios and continuous play — 2026-09-27
+
+- Re-read the public Game Theory Arena page and included all 80 public records,
+  adding 30 missing scenarios. Catalogue now contains 177 unique routes. Public
+  situations and available choices are retained, with clearer action names where
+  the source used generic terms. The prison deal retains the requested sentences.
+- Removed search and format/topic dropdowns. Real-life decisions lead the list.
+- Added Previous game / Next game above the player, Next game below it, and
+  a React key that resets player state across same-format navigation.
+- `npm run lint`, `npm test` (12 tests), `npm run build`: passed.
+- Production browser on port 3002: played salary-opening signal, navigated with
+  keyboard Next game to Job Market Signaling, verified fresh state/enabled
+  choices; checked zero filter inputs and real-life first entry.
+- Repeated game: concrete patrol/skip buttons, opponent policy, live feedback,
+  and ten-row history verified. First-round cooperation and subsequent copying
+  confirmed; choices disabled after ten rounds. Sequential concrete actions
+  correctly awarded both final shares. Homepage sentence game and five-round
+  patrol lesson also passed; mobile menu Enter/Escape restored visible focus.
+- Checked 390, 768, 1024, 1440px layouts without page overflow. Wide matrices
+  scroll inside their labeled container. Existing reduced-motion rules remain
+  applicable; interactions do not depend on motion. No browser console errors.
+- New screenshots: real-life-desktop-1440.jpg and real-life-mobile-390.jpg.

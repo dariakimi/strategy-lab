@@ -7,6 +7,7 @@ type Base = {
   concept: string;
   situation: string;
   opponent: string;
+  source?: "arena";
 };
 export type MatrixScenario = Base & {
   type: "matrix";
@@ -18,6 +19,7 @@ export type MatrixScenario = Base & {
 export type UltimatumScenario = Base & { type: "ultimatum"; threshold: number };
 export type CentipedeScenario = Base & {
   type: "centipede";
+  actions: { take: string; pass: string };
   nodes: number;
   startPot: Pair;
   growth: number;
@@ -34,6 +36,7 @@ export type Strategy =
   | "tit-for-two-tats";
 export type RepeatedScenario = Base & {
   type: "repeated";
+  actions: Record<Move, string>;
   strategy: Strategy;
   rounds: number;
 };
@@ -47,19 +50,6 @@ export const formats = {
   ultimatum: "Bargaining",
   centipede: "Sequential trust",
   repeated: "Repeated dilemma",
-};
-export const policies: Record<Strategy, string> = {
-  "tit-for-tat": "Cooperates first, then copies your previous move.",
-  "grim-trigger": "Cooperates until you defect once, then defects forever.",
-  "always-defect": "Defects every round.",
-  "always-cooperate": "Cooperates every round.",
-  "generous-tit-for-tat":
-    "Cooperates first. After your defection, retaliates with 70% probability; otherwise forgives.",
-  "win-stay-lose-shift":
-    "Cooperates first. Repeats its own move after earning 3 or 5 points; switches after earning 0 or 1.",
-  random: "Independently chooses each move with equal probability.",
-  "tit-for-two-tats":
-    "Defects only after your two most recent moves were both Defect.",
 };
 export function nashCells(s: MatrixScenario): number[] {
   const better = (a: number, b: number) => (s.prison ? a <= b : a >= b);
@@ -168,4 +158,27 @@ export function repeatRound(
   const opponent = strategyMove(s.strategy, history, draw),
     [yours, theirs] = payoff(you, opponent);
   return [...history, { you, opponent, yours, theirs }];
+}
+
+export function describePolicy(s: RepeatedScenario): string {
+  const keep = `“${s.actions.Cooperate}”`,
+    breakAction = `“${s.actions.Defect}”`;
+  switch (s.strategy) {
+    case "tit-for-tat":
+      return `Chooses ${keep} first, then copies your previous action.`;
+    case "grim-trigger":
+      return `Chooses ${keep} until you choose ${breakAction} once, then chooses ${breakAction} for all remaining rounds.`;
+    case "always-cooperate":
+      return `Chooses ${keep} every round.`;
+    case "always-defect":
+      return `Chooses ${breakAction} every round.`;
+    case "generous-tit-for-tat":
+      return `Chooses ${keep} first. After you choose ${breakAction}, responds with ${breakAction} 70% of the time and ${keep} otherwise.`;
+    case "win-stay-lose-shift":
+      return `Starts with ${keep}. Repeats its action after earning 3 or 5 points; switches after earning 0 or 1.`;
+    case "tit-for-two-tats":
+      return `Chooses ${breakAction} only after you choose it twice in a row; otherwise chooses ${keep}.`;
+    case "random":
+      return `Chooses ${keep} or ${breakAction} with equal probability each round.`;
+  }
 }

@@ -109,15 +109,14 @@ The learning sequence is situation → choice → outcome → concept. Reading a
 
 ## Playable game library
 
-Visit `/games` for 147 scenarios: 77 payoff matrices, 20 bargaining experiments,
-15 sequential trust games, and 35 repeated dilemmas. Search titles, concepts, and
-situations; filter by format or topic. Every scenario has a statically generated
+Visit `/games` for 177 scenarios: 107 payoff matrices, 20 bargaining experiments,
+15 sequential trust games, and 35 repeated dilemmas. All 80 scenarios from Game Theory Arena are included, with real-life situations presented first. Browse the simple list or start playing and use Previous game / Next game to continue. Every scenario has a statically generated
 `/games/[slug]` page and a restartable, keyboard-accessible player.
 
 - `src/lib/scenarios.ts`: typed catalogue and stable slugs.
 - `src/lib/scenario-engine.ts`: pure rules, Nash calculation, sequential payouts,
   bargaining acceptance, and eight repeated-game policies.
-- `src/components/GameLibrary.tsx`: search, filters, and progressive display.
+- `src/components/GameLibrary.tsx`: a straightforward situation index without filters.
 - `src/components/ScenarioPlayer.tsx`: accessible players for the four formats.
 - `src/lib/scenario-engine.test.ts`: catalogue integrity and rule regression tests.
 
@@ -134,3 +133,5 @@ Generous Tit for Tat, Win Stay Lose Shift, Random, and Tit for Two Tats.
 Random policies use browser cryptographic randomness; tests inject fixed draws.
 Scenario narratives provide context, while the playable panel defines the actual
 model. These simplified models are educational, not real-world predictions.
+
+Concrete scenario actions appear on choice buttons, in repeated-game policies, feedback, and history. Public-source entries link to https://dariakimi.github.io/game-theory-arena/. Scenario navigation resets game state when the URL changes.
